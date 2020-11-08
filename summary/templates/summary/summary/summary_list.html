@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Display list of all summaries -->
+{% for summary in summary_list %}
+<div class="card bg-light mb-3" style="max-width: 100%;">
+  <div class="card-header">{{ summary.title }}</div>
+  <div class="card-body">
+    <!-- Link to display summarys for specific user -->
+    <h4 class="card-title">Created By {{ summary.owner.username }} </h4>
+    <p class="card-text"> {{ summary.body|truncatewords_html:30 }} </p>
+    <a href="{{ summary.get_absolute_url }}">Detail</a>
+  </div>
+</div>
+{% empty %}
+<p>No summary yet</p>
+{% endfor %}
+
+
+<!-- Display pagination only if page_obj have some value -->
+{% if page_obj %}
+{% include "summary/summary/pagination.html" with page=page_obj %}
+{% endif %}
+
+
+{% endblock %}

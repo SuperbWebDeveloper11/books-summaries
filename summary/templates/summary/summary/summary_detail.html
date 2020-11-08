@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Display summary.title and summary.owner.username -->
+<h2>{{ summary.title }} By {{ summary.owner.username }} </h2>
+
+<!-- Display summary body -->
+<p> {{ summary.body }} </p> 
+
+<!-- Display 'Edit' and 'Delete' buttons -->
+{% if user.is_authenticated and summary.owner == request.user %}
+<p>
+<a href="{% url 'summary:summary_update' summary.pk %}" class="btn btn-primary"> Update </a> 
+<a href="{% url 'summary:summary_delete' summary.pk %}" class="btn btn-danger"> Delete </a>
+</p>
+<hr />
+{% endif %}
+
+{% endblock %}
