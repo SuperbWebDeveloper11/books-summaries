@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load summary_filters %}
 
 {% block content %}
 
@@ -9,7 +10,7 @@
   <div class="card-body">
     <!-- Link to display summarys for specific user -->
     <h4 class="card-title">Created By {{ summary.owner.username }} </h4>
-    <p class="card-text"> {{ summary.body|truncatewords_html:30 }} </p>
+    <p class="card-text"> {{ summary.body|markdown_format|truncatewords_html:30 }} </p>
     <a href="{{ summary.get_absolute_url }}">Detail</a>
   </div>
 </div>
