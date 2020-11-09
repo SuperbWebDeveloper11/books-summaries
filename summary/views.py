@@ -65,4 +65,8 @@ class SummaryDelete(SuccessMessageMixin, LoginRequiredMixin, DeleteView):
         else:
             return HttpResponse('You are not summary owner')
 
+    def delete(self, request, *args, **kwargs):
+        # inform user that "Summary was deleted successfully"
+        messages.info(request, self.success_message)
+        return super().delete(request, *args, **kwargs)
 
