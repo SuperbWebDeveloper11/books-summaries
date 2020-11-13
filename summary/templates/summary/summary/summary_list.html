@@ -3,6 +3,9 @@
 
 {% block content %}
 
+<!-- Inclusion tag that display all tags - 'blog/post/tags_list.html' -->
+{% tags_list %}
+
 <!-- Display list of all summaries -->
 {% for summary in summary_list %}
 <div class="card bg-light mb-3" style="max-width: 100%;">

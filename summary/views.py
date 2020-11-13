@@ -9,6 +9,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 # class-based generic views
 from django.views.generic import ListView, DetailView, View
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from taggit.models import Tag
 # import models
 from django.contrib.auth.models import User
 from .models import Summary
@@ -20,6 +21,14 @@ class SummaryList(ListView):
     context_object_name = 'summary_list'
     paginate_by = 5
 
+    def get_queryset(self):
+        print(self.kwargs)
+        if 'tag_id' in self.kwargs:
+            tag = get_object_or_404(Tag, pk=self.kwargs['tag_id']) 
+            return Summary.objects.filter(tags__in=[tag]) # filter posts (tags__in ???)
+        else:
+            return Summary.objects.all()
+
 
 class SummaryDetail(DetailView):
     model = Summary
@@ -30,7 +39,7 @@ class SummaryDetail(DetailView):
 class SummaryCreate(SuccessMessageMixin, LoginRequiredMixin, CreateView): 
     model = Summary
     template_name = 'summary/summary/summary_form_create.html' 
-    fields = ['title', 'body']
+    fields = ['title', 'body', 'tags']
     success_message = "Summary was created successfully"
 
     def form_valid(self, form):
@@ -41,7 +50,7 @@ class SummaryCreate(SuccessMessageMixin, LoginRequiredMixin, CreateView):
 class SummaryUpdate(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     model = Summary
     template_name = 'summary/summary/summary_form_update.html' 
-    fields = ['title', 'body']
+    fields = ['title', 'body', 'tags']
     success_message = "Summary was updated successfully"
 
     def form_valid(self, form):

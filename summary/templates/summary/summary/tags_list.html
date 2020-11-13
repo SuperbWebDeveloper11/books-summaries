@@ -1,0 +1,18 @@
+
+<!-- Display all tags -->
+<div>
+{% if tags_list %}
+    <p class='tags'>Categories : 
+        {% for tag in tags_list %}
+            <a href="{% url 'summary:summary_list' tag_id=tag.id %}" class="btn btn-outline-secondary btn-sm my-2">{{ tag.name }}</a>
+        {% endfor %}
+    </p>
+{% endif %}
+</div>
+
+<!-- Some styles to make those links in the middle -->
+<style>
+    p.tags{
+        text-align: center;
+    }
+</style>
