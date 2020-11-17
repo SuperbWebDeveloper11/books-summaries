@@ -3,16 +3,21 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.loader import render_to_string
+from django.core.files.storage import FileSystemStorage
+from django.template.loader import render_to_string
 # messages framework
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 # class-based generic views
 from django.views.generic import ListView, DetailView, View
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+# third party imports
 from taggit.models import Tag
+from weasyprint import HTML
 # import models
 from django.contrib.auth.models import User
 from .models import Summary
+
 
 
 class SummaryList(ListView): 
@@ -22,7 +27,6 @@ class SummaryList(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        print(self.kwargs)
         if 'tag_id' in self.kwargs:
             tag = get_object_or_404(Tag, pk=self.kwargs['tag_id']) 
             return Summary.objects.filter(tags__in=[tag]) # filter posts (tags__in ???)
@@ -78,4 +82,22 @@ class SummaryDelete(SuccessMessageMixin, LoginRequiredMixin, DeleteView):
         # inform user that "Summary was deleted successfully"
         messages.info(request, self.success_message)
         return super().delete(request, *args, **kwargs)
+
+
+# download the file with weasyprint
+class SummaryDownload(View):
+    def get(self, request, *args, **kwargs):
+        summary = get_object_or_404(Summary, pk=kwargs['pk'])
+        context = {'summary': summary}
+        html_string = render_to_string('summary/summary/summary_detail.html', context)
+
+        html = HTML(string=html_string)
+        html.write_pdf(target='/tmp/mypdf.pdf');
+
+        fs = FileSystemStorage('/tmp')
+        with fs.open('mypdf.pdf') as pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            response['Content-Disposition'] = 'inline; filename="mypdf.pdf"'
+            return response
+
 
