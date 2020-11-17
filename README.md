@@ -1,13 +1,13 @@
 
 # Books Summaries
 
-books summaries is a django prject that allow users to create summaries for books, then they could search in those summaries and read them or download a pdf copy of the summary.
+books summaries is a django prject that allow users to create summaries for books, and they could also read each summary or download a pdf copy 
 
 
 ## Installed apps :
-```
+```python
 INSTALLED_APPS = [
-    'accounts.apps.AccountsConfig',
+    'accounts.apps.AccountsConfig', # authentication app
     ...
     'crispy_forms',
     'taggit',
@@ -16,7 +16,7 @@ INSTALLED_APPS = [
 ```
 
 ## root url configuration :
-```
+```python
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
